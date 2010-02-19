@@ -251,6 +251,6 @@ int main(int argc, char *argv[]) {
 	printf("Par. Processor Time: %ld seconds\n", par_timed);
 	free(par_solution_count);
 
-	printf("Par/Seq Ratio: %.3f", (1.0 * par_timed) / seq_timed);
+	printf("Par/Seq Ratio: %.3f\n", (1.0 * par_timed) / seq_timed);
 	return 0;
 }
