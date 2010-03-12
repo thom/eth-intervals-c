@@ -215,7 +215,7 @@ void solve_in_parallel(int problem_size, int cutoff_level, int *solution_count)
 
 int main(int argc, char *argv[]) {
 	if(argc != 3) {
-		fprintf(stderr, "Usage: nqueens problem_size cutoff_level");
+		fprintf(stderr, "Usage: nqueens problem_size cutoff_level\n");
 		return 1;
 	}
 	
