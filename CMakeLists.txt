@@ -9,6 +9,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 #include(MacroEnsureOutOfSourceBuild)
 #MACRO_ENSURE_OUT_OF_SOURCE_BUILD()
 
+# If the user specifies -DCMAKE_BUILD_TYPE on the command line, take
+# their definition and dump it in the cache along with proper
+# documentation, otherwise set CMAKE_BUILD_TYPE to Debug prior to
+# calling PROJECT()
+if(DEFINED CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose the type of
+build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug
+Release RelWithDebInfo MinSizeRel.")
+else()
+   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build,
+options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release
+RelWithDebInfo MinSizeRel.")
+endif()
+
 # Compiler configuration
 # TODO: Make path to clang configurable
 set(CMAKE_C_COMPILER "/usr/local/bin/clang")
