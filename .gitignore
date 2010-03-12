@@ -7,3 +7,5 @@ profile
 doc
 bin
 local
+CMakeCache.txt
+CMakeFiles
