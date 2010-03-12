@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 2.8)
 # Set search path for cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
+# Disallow in-source build
+# TODO: Is there a reason to disallow in-source builds?
+#include(MacroEnsureOutOfSourceBuild)
+#MACRO_ENSURE_OUT_OF_SOURCE_BUILD()
+
 # Compiler configuration
 # TODO: Make path to clang configurable
 set(CMAKE_C_COMPILER "/usr/local/bin/clang")
