@@ -4,8 +4,16 @@ cmake_minimum_required(VERSION 2.8)
 # Set search path for cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
+# Compiler configuration
+# TODO: Make path to clang configurable
+set(CMAKE_C_COMPILER "/usr/local/bin/clang")
+
 # Project name and language
 project(Intervals C)
+
+# Flags
+set(CMAKE_C_FLAGS "-fblocks")
+set(CMAKE_C_FLAGS_DEBUG "-DNDEBUG")
 
 # Process subdirectories
 add_subdirectory(include)
