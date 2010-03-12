@@ -1,5 +1,5 @@
-# MACRO_ENSURE_OUT_OF_SOURCE_BUILD
-macro(MACRO_ENSURE_OUT_OF_SOURCE_BUILD)
+# ensure_out_of_source_build
+macro(ensure_out_of_source_build)
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" _insource)
 if(_insource)
@@ -12,4 +12,4 @@ if(_insource)
  )
 endif(_insource)
 
-endmacro(MACRO_ENSURE_OUT_OF_SOURCE_BUILD)
+endmacro(ensure_out_of_source_build)

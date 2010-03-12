@@ -6,8 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Disallow in-source build
 # TODO: Is there a reason to disallow in-source builds?
-#include(MacroEnsureOutOfSourceBuild)
-#MACRO_ENSURE_OUT_OF_SOURCE_BUILD()
+include(EnsureOutOfSourceBuild)
+ensure_out_of_source_build()
 
 # If the user specifies -DCMAKE_BUILD_TYPE on the command line, take
 # their definition and dump it in the cache along with proper
