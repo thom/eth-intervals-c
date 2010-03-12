@@ -53,6 +53,7 @@ find_package(Threads REQUIRED)
 
 # Process subdirectories
 add_subdirectory(include)
+add_subdirectory(src)
 
 # Add uninstall support
 CONFIGURE_FILE(
