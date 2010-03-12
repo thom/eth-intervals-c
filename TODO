@@ -1,0 +1,8 @@
+* find package macro for BlocksRuntime
+	- /usr/local/lib/libBlocksRuntime.so
+	- /usr/local/include/Block.h
+	- /usr/local/include/Block_private.h
+
+* Target to build and install LLVM including clang and compiler-rt
+
+* Target to update LLVM including clang and compiler-rt

@@ -51,6 +51,9 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Single
 # Sets CMAKE_THREAD_LIBS_INIT
 find_package(Threads REQUIRED)
 
+# TODO: Add package module for BlocksRuntime
+# find_package(BlocksRuntime REQUIRED)
+
 # Process subdirectories
 add_subdirectory(include)
 add_subdirectory(src)
