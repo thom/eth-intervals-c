@@ -34,6 +34,14 @@ project(Intervals C)
 set(CMAKE_C_FLAGS "-fblocks")
 set(CMAKE_C_FLAGS_DEBUG "-DNDEBUG")
 
+# Install prefix
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX
+    # TODO: Make this configurable
+    "/home/thom/tmp" CACHE PATH "Intervals install prefix" FORCE
+    )
+endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
 # Process subdirectories
 add_subdirectory(include)
 
