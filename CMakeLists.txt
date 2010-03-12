@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Set search path for cmake modules
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Disallow in-source build
 # TODO: Is there a reason to disallow in-source builds?
@@ -25,10 +25,10 @@ add_subdirectory(include)
 
 # Add uninstall support
 CONFIGURE_FILE(
-  "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake.in"
-  "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake" @ONLY
+  "${CMAKE_MODULE_PATH}/Uninstall.cmake.in"
+  "${CMAKE_MODULE_PATH}/Uninstall.cmake" @ONLY
   )
 ADD_CUSTOM_TARGET(
   uninstall "${CMAKE_COMMAND}" -P
-  "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake"
+  "${CMAKE_MODULE_PATH}/Uninstall.cmake"
 )
