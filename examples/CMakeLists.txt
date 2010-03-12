@@ -5,8 +5,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 set(PROGRAMS nqueens)
 
 # Set core libraries used to compile examples
-# TODO: Replace "BlocksRuntime" through ${CMAKE_BLOCKS_LIBRARY}
-set(CORELIBS ${CMAKE_THREAD_LIBS_INIT} BlocksRuntime intervals)
+set(CORELIBS ${CMAKE_THREAD_LIBS_INIT} ${BlocksRuntime_LIBRARIES} intervals)
 
 # Build examples
 foreach(program ${PROGRAMS})
