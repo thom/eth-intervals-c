@@ -8,6 +8,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 include(EnsureOutOfSourceBuild)
 ensure_out_of_source_build()
 
+# Support for Doxygen
+include(UseDoxygen OPTIONAL)
+
 # If the user specifies -DCMAKE_BUILD_TYPE on the command line, take
 # their definition and dump it in the cache along with proper
 # documentation, otherwise set CMAKE_BUILD_TYPE to Debug prior to
