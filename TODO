@@ -1,5 +1,3 @@
-* Target to build and install LLVM including clang and compiler-rt
-
-* Target to update LLVM including clang and compiler-rt
+* Configure paths
 
 * Target for Doxygen

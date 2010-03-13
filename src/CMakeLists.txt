@@ -1,5 +1,5 @@
 # Include header files
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include ${BlocksRuntime_INCLUDE_DIRS})
 
 # Build library
 add_library(intervals interval.c thread_pool.c)

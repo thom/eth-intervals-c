@@ -10,15 +10,15 @@ include(LibFindMacros)
 # Include dir
 find_path(BlocksRuntime_INCLUDE_DIR
   NAMES Block.h Block_private.h
-  # TODO: Set path according to install prefix
-  PATHS /usr/include /usr/local/include
+  PATHS /home/thom/tmp/include /usr/include /usr/local/include
+  NO_DEFAULT_PATH
   )
 
 # Finally the library itself
 find_library(BlocksRuntime_LIBRARY
   NAMES BlocksRuntime
-  # TODO: Set path according to install prefix
-  PATHS /usr/include /usr/local/include
+  PATHS /home/thom/tmp/lib /usr/include /usr/local/include
+  NO_DEFAULT_PATH
   )
 
 # Set the include dir variables and the libraries and let libfind_process do the rest.

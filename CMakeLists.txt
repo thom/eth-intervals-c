@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # Disallow in-source build
-# TODO: Is there a reason to disallow in-source builds?
 include(EnsureOutOfSourceBuild)
 ensure_out_of_source_build()
 
@@ -25,7 +24,7 @@ endif()
 
 # Compiler configuration
 # TODO: Make path to clang configurable
-set(CMAKE_C_COMPILER "/usr/local/bin/clang")
+set(CMAKE_C_COMPILER "/home/thom/tmp/bin/clang")
 
 # Project name and language
 project(Intervals C)
@@ -52,8 +51,15 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Single
 # Sets CMAKE_THREAD_LIBS_INIT
 find_package(Threads REQUIRED)
 
-# BlocksRuntime is required
-find_package(BlocksRuntime REQUIRED)
+# BlocksRuntime is required but we can't use REQUIRED here as it
+# wouldn't allow us to install it if it's not already installed
+find_package(BlocksRuntime)
+if(NOT BlocksRuntime_FOUND)
+  message(WARNING
+  "BlocksRuntime not found!
+  Build and install compiler-rt first: make compiler-rt"
+  )
+endif(NOT BlocksRuntime_FOUND)
 
 # Process subdirectories
 add_subdirectory(include)
@@ -61,11 +67,51 @@ add_subdirectory(src)
 add_subdirectory(examples)
 
 # Add uninstall support
-CONFIGURE_FILE(
+configure_file(
   "${CMAKE_MODULE_PATH}/Uninstall.cmake.in"
   "${CMAKE_MODULE_PATH}/Uninstall.cmake" @ONLY
   )
-ADD_CUSTOM_TARGET(
-  uninstall "${CMAKE_COMMAND}" -P
-  "${CMAKE_MODULE_PATH}/Uninstall.cmake"
-)
+add_custom_target(
+  uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/Uninstall.cmake" 
+  )
+
+# External projects: LLVM (including clang) and compiler-rt
+include(ExternalProject)
+
+# Set path of the local src and build directory
+set(LOCAL_PATH ${CMAKE_SOURCE_DIR}/local)
+
+# Download, build and install compiler-rt
+ExternalProject_Add(compiler-rt OFF
+  PREFIX ${LOCAL_PATH}
+  SVN_REPOSITORY http://llvm.org/svn/llvm-project/compiler-rt/trunk
+  # SVN_REVISION rev
+  # TODO: Fix prefix
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=/home/thom/tmp
+  BUILD_COMMAND ""
+  INSTALL_COMMAND make install
+  )
+
+# Download, build and install LLVM including clang
+ExternalProject_Add(llvm OFF
+  # DEPENDS compiler-rt
+  PREFIX ${LOCAL_PATH}
+  SVN_REPOSITORY http://llvm.org/svn/llvm-project/llvm/trunk
+  # SVN_REVISION rev
+  # TODO: Fix prefix
+  CMAKE_ARGS -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX=/home/thom/tmp
+  BUILD_COMMAND ""
+  INSTALL_COMMAND make install
+  )
+
+# Extra step to checkout and update the clang source in the LLVM tools
+# directory
+ExternalProject_Add_Step(llvm clang
+  # -Drev=98400: SVN revision
+  COMMAND ${CMAKE_COMMAND} -Dpath=${LOCAL_PATH}/src/llvm/tools -P "${CMAKE_MODULE_PATH}/Clang.cmake"
+  COMMENT "Clang"
+  DEPENDEES download update
+  DEPENDERS configure build install
+  ALWAYS 1
+  )

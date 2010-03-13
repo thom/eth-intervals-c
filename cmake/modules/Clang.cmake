@@ -1,0 +1,11 @@
+if(DEFINED rev)
+  set(revision "-r${rev}")
+endif(DEFINED rev)
+
+if(EXISTS ${path}/clang)
+  message(STATUS "Updating clang repository")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E chdir ${path}/clang svn up ${revision})
+else()
+  message(STATUS "Checking out clang repository")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E chdir ${path} svn co ${revision} http://llvm.org/svn/llvm-project/cfe/trunk clang)
+endif(EXISTS ${path}/clang)
