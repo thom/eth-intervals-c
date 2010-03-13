@@ -10,14 +10,14 @@ include(LibFindMacros)
 # Include dir
 find_path(BlocksRuntime_INCLUDE_DIR
   NAMES Block.h Block_private.h
-  PATHS /home/thom/tmp/include /usr/include /usr/local/include
+  PATHS ${LLVM_INSTALL_PREFIX}/include /usr/include /usr/local/include
   NO_DEFAULT_PATH
   )
 
 # Finally the library itself
 find_library(BlocksRuntime_LIBRARY
   NAMES BlocksRuntime
-  PATHS /home/thom/tmp/lib /usr/include /usr/local/include
+  PATHS ${LLVM_INSTALL_PREFIX}/lib /usr/lib /usr/local/lib
   NO_DEFAULT_PATH
   )
 
