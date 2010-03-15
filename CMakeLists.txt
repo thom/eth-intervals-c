@@ -16,7 +16,6 @@ set(LLVM_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/local CACHE STRING
 # Compiler configuration
 if(EXISTS ${LLVM_INSTALL_PREFIX}/bin/clang)
   set(CMAKE_C_COMPILER "${LLVM_INSTALL_PREFIX}/bin/clang")
-  set(USE_CLANG 1)
 endif(EXISTS ${LLVM_INSTALL_PREFIX}/bin/clang)
 
 # Project name and language
