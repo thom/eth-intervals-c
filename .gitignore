@@ -9,4 +9,4 @@ bin
 local
 CMakeCache.txt
 CMakeFiles
-cmake/modules/Uninstall.cmake
+cmake/Uninstall.cmake

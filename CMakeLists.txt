@@ -1,32 +1,17 @@
 # Require cmake >= 2.8
 cmake_minimum_required(VERSION 2.8)
 
-# Set search path for cmake modules
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
-
-# Disallow in-source build
-include(EnsureOutOfSourceBuild)
-ensure_out_of_source_build()
-
-# Support for Doxygen
-include(UseDoxygen OPTIONAL)
-
 # If the user specifies -DCMAKE_BUILD_TYPE on the command line, take
-# their definition and dump it in the cache along with proper
-# documentation, otherwise set CMAKE_BUILD_TYPE to Debug prior to
+# their definition, otherwise set CMAKE_BUILD_TYPE to Debug prior to
 # calling PROJECT()
-if(DEFINED CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose the type of
-build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug
-Release RelWithDebInfo MinSizeRel.")
-else()
-   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build,
-options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release
-RelWithDebInfo MinSizeRel.")
-endif()
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
+    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel.")
+endif(NOT CMAKE_BUILD_TYPE)
 
 # Local directory
-set(LLVM_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/local CACHE STRING "Installation prefix of LLVM")
+set(LLVM_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/local CACHE STRING
+  "Installation prefix of LLVM")
 
 # Compiler configuration
 if(EXISTS ${LLVM_INSTALL_PREFIX}/bin/clang)
@@ -38,10 +23,15 @@ endif(EXISTS ${LLVM_INSTALL_PREFIX}/bin/clang)
 project(Intervals C)
 
 # Flags
-if(USE_CLANG)
-  set(CMAKE_C_FLAGS "-fblocks")
-endif(USE_CLANG)
-set(CMAKE_C_FLAGS_DEBUG "-DNDEBUG")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fblocks")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DNDEBUG")
+
+# Set search path for cmake modules
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+# Disallow in-source build
+include(EnsureOutOfSourceBuild)
+ensure_out_of_source_build()
 
 # Install prefix
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -49,12 +39,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     ${CMAKE_SOURCE_DIR}/local CACHE PATH "Intervals install prefix" FORCE
     )
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-
-# Output paths
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin CACHE PATH
-  "Single directory for all executables.")
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Single
-  directory for all libraries.")
 
 # Threads are required
 # Sets CMAKE_THREAD_LIBS_INIT
@@ -70,10 +54,19 @@ if(NOT BlocksRuntime_FOUND)
   )
 endif(NOT BlocksRuntime_FOUND)
 
+# Output paths
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin CACHE PATH
+  "Single directory for all executables.")
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Single
+  directory for all libraries.")
+
 # Process subdirectories
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(examples)
+
+# Support for Doxygen
+include(UseDoxygen OPTIONAL)
 
 # Add uninstall support
 configure_file(
@@ -88,12 +81,9 @@ add_custom_target(
 # External projects: LLVM (including clang) and compiler-rt
 include(ExternalProject)
 
-# Set path of the local src and build directory
-set(LLVM_LOCAL_PATH ${CMAKE_SOURCE_DIR}/local)
-
 # Download, build and install compiler-rt
 ExternalProject_Add(compiler-rt OFF
-  PREFIX ${LLVM_LOCAL_PATH}
+  PREFIX ${LLVM_INSTALL_PREFIX}
   SVN_REPOSITORY http://llvm.org/svn/llvm-project/compiler-rt/trunk
   # SVN_REVISION rev
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${LLVM_INSTALL_PREFIX}
@@ -104,7 +94,7 @@ ExternalProject_Add(compiler-rt OFF
 # Download, build and install LLVM including clang
 ExternalProject_Add(llvm OFF
   # DEPENDS compiler-rt
-  PREFIX ${LLVM_LOCAL_PATH}
+  PREFIX ${LLVM_INSTALL_PREFIX}
   SVN_REPOSITORY http://llvm.org/svn/llvm-project/llvm/trunk
   # SVN_REVISION rev
   CMAKE_ARGS -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX=${LLVM_INSTALL_PREFIX}
@@ -116,7 +106,7 @@ ExternalProject_Add(llvm OFF
 # directory
 ExternalProject_Add_Step(llvm clang
   # -Drev=98400: SVN revision
-  COMMAND ${CMAKE_COMMAND} -Dpath=${LLVM_LOCAL_PATH}/src/llvm/tools -P "${CMAKE_MODULE_PATH}/Clang.cmake"
+  COMMAND ${CMAKE_COMMAND} -Dpath=${LLVM_INSTALL_PREFIX}/src/llvm/tools -P "${CMAKE_MODULE_PATH}/Clang.cmake"
   COMMENT "Clang"
   DEPENDEES download update
   DEPENDERS configure build install
