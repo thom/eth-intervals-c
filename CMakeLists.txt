@@ -10,7 +10,11 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 # Local directory
-set(LLVM_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/local CACHE STRING
+set(LOCAL_DIR ${CMAKE_SOURCE_DIR}/local CACHE STRING
+  "Local build directory for external projects")
+
+# LLVM install prefix
+set(LLVM_INSTALL_PREFIX ${LOCAL_DIR} CACHE STRING
   "Installation prefix of LLVM")
 
 # Compiler configuration
@@ -82,7 +86,7 @@ include(ExternalProject)
 
 # Download, build and install compiler-rt
 ExternalProject_Add(compiler-rt OFF
-  PREFIX ${LLVM_INSTALL_PREFIX}
+  PREFIX ${LOCAL_DIR}
   SVN_REPOSITORY http://llvm.org/svn/llvm-project/compiler-rt/trunk
   # SVN_REVISION rev
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${LLVM_INSTALL_PREFIX}
@@ -93,7 +97,7 @@ ExternalProject_Add(compiler-rt OFF
 # Download, build and install LLVM including clang
 ExternalProject_Add(llvm OFF
   # DEPENDS compiler-rt
-  PREFIX ${LLVM_INSTALL_PREFIX}
+  PREFIX ${LOCAL_DIR}
   SVN_REPOSITORY http://llvm.org/svn/llvm-project/llvm/trunk
   # SVN_REVISION rev
   CMAKE_ARGS -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX=${LLVM_INSTALL_PREFIX}
@@ -105,7 +109,7 @@ ExternalProject_Add(llvm OFF
 # directory
 ExternalProject_Add_Step(llvm clang
   # -Drev=98400: SVN revision
-  COMMAND ${CMAKE_COMMAND} -Dpath=${LLVM_INSTALL_PREFIX}/src/llvm/tools -P "${CMAKE_MODULE_PATH}/Clang.cmake"
+  COMMAND ${CMAKE_COMMAND} -Dpath=${LOCAL_DIR}/src/llvm/tools -P "${CMAKE_MODULE_PATH}/Clang.cmake"
   COMMENT "Clang"
   DEPENDEES download update
   DEPENDERS configure build install
