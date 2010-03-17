@@ -65,15 +65,14 @@ int sequential_fibonacci(int n)
 }
 
 /*
-  TODO: Not working -> still need to figure out how to encapsulate the state
-  correctly (interval_f?)
+  TODO: Doesn't work correctly with interval, using subinterval doesn't make
+  any sense though...
 
-  TODO: subinterval doesn't make any sense here -> use interval/interval_f
+  TODO: Needs HB relations...
 */
 void parallel_fibonacci(int n, int *result) {
-	// Granularity control
-	if (n <= THRESHOLD) {
-		*result = sequential_fibonacci(n);
+	if (n < 2) {
+		*result = n;
 	}
 	else {
 		int *result1 = NEW(int);
@@ -88,8 +87,7 @@ void parallel_fibonacci(int n, int *result) {
 				parallel_fibonacci(n - 2, result2);
 			});
 
-		atomic_add(result, *result1);
-		atomic_add(result, *result2);
+		*result = *result1 + *result2;
 	}
 }
 
