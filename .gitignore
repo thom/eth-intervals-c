@@ -10,3 +10,4 @@ local
 CMakeCache.txt
 CMakeFiles
 cmake/Uninstall.cmake
+*~
