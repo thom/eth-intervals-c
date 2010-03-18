@@ -2,7 +2,7 @@
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Examples are all compiled the same way
-set(PROGRAMS playground nqueens fibonacci forkjoin arraytest)
+set(PROGRAMS playground nqueens fibonacci forkjoin arraytest hb)
 
 # Set core libraries used to compile examples
 set(CORELIBS ${CMAKE_THREAD_LIBS_INIT} ${BlocksRuntime_LIBRARIES} intervals)
