@@ -12,7 +12,7 @@
 #define THRESHOLD 13
 
 int sequential_fibonacci(int n);
-void parallel_fibonacci(int n, int *result);
+int parallel_fibonacci(int n);
 
 int main(int argc, char *argv[])
 {
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	*par_solution = 0;
 	time_t par_time0 = time(NULL);
 	root_interval(^(point_t *end) {
-			parallel_fibonacci(n, par_solution);
+			*par_solution = parallel_fibonacci(n);
 		});
 	time_t par_time1 = time(NULL);
 	time_t par_timed = par_time1 - par_time0;
@@ -64,30 +64,23 @@ int sequential_fibonacci(int n)
 	}
 }
 
-/*
-  TODO: Doesn't work correctly with interval, using subinterval doesn't make
-  any sense though...
-
-  TODO: Needs HB relations...
-*/
-void parallel_fibonacci(int n, int *result) {
-	if (n < 2) {
-		*result = n;
+int parallel_fibonacci(int n) {
+	if (n < THRESHOLD) {
+	        return sequential_fibonacci(n);
 	}
 	else {
-		int *result1 = NEW(int);
-		*result1 = *result;
-		subinterval(^(point_t *_) {
-				parallel_fibonacci(n - 1, result1);
-			});
-
-		int *result2 = NEW(int);
-		*result2 = *result;
-		subinterval(^(point_t *_) {
-				parallel_fibonacci(n - 2, result2);
-			});
-
-		*result = *result1 + *result2;
-	}
+                // Note: Due to subinterval, we know that the stack frame
+                // will stick around :)
+                int results[2];
+                int *resultptr = results;
+                subinterval(^(point_t *end) {
+                        interval(end, ^(point_t *_) {
+                                resultptr[0] = parallel_fibonacci(n - 1);
+                        });
+                        interval(end, ^(point_t *_) {
+                                resultptr[1] = parallel_fibonacci(n - 2);                                       
+                        });
+                });
+                return results[0] + results[1];
+        }
 }
-
