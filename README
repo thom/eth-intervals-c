@@ -35,7 +35,18 @@ Use the CMake option
 
 to change the LLVM installation prefix.
 
-Note: You also have to set LLVM_INSTALL_PREFIX if you installed LLVM
-and clang on your own in another directory as the CMake scripts will
-use LLVM_INSTALL_PREFIX to determine the location of clang and the
-Blocks runtime.
+
+Note: 
+
+You also have to set LLVM_INSTALL_PREFIX if you installed LLVM and
+clang on your own in another directory as the CMake scripts will use
+LLVM_INSTALL_PREFIX to determine the location of clang and the Blocks
+runtime.
+
+Clean your build directory after building LLVM and compiler-rt and run
+cmake again:
+
+# in build/
+$ rm -rf *
+$ cmake ../
+$ make

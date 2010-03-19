@@ -20,28 +20,19 @@ set(LLVM_INSTALL_PREFIX ${LOCAL_DIR} CACHE STRING
 # Compiler configuration
 if(EXISTS ${LLVM_INSTALL_PREFIX}/bin/clang)
   set(CMAKE_C_COMPILER "${LLVM_INSTALL_PREFIX}/bin/clang")
+else()
+  message(WARNING
+    "clang (${LLVM_INSTALL_PREFIX}/bin/clang) not found!
+    Build and install LLVM first: make llvm compiler-rt or 
+    set LLVM_INSTALL_PREFIX to where you installed it"
+    )
 endif(EXISTS ${LLVM_INSTALL_PREFIX}/bin/clang)
 
 # Project name and language
 project(Intervals C)
 
-# Flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fblocks")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DNDEBUG")
-
 # Set search path for cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
-# Disallow in-source build
-include(EnsureOutOfSourceBuild)
-ensure_out_of_source_build()
-
-# Install prefix
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX
-    ${CMAKE_SOURCE_DIR}/local CACHE PATH "Intervals install prefix" FORCE
-    )
-endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 # Threads are required
 # Sets CMAKE_THREAD_LIBS_INIT
@@ -56,6 +47,21 @@ if(NOT BlocksRuntime_FOUND)
   Build and install compiler-rt first: make compiler-rt"
   )
 endif(NOT BlocksRuntime_FOUND)
+
+# Flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fblocks")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DNDEBUG")
+
+# Disallow in-source build
+include(EnsureOutOfSourceBuild)
+ensure_out_of_source_build()
+
+# Install prefix
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX
+    ${CMAKE_SOURCE_DIR}/local CACHE PATH "Intervals install prefix" FORCE
+    )
+endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 # Output paths
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin CACHE PATH
