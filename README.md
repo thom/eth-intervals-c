@@ -1,6 +1,6 @@
 # Implementation of Intervals for C
 
-##Build instructions
+## Build instructions
 
 ```
 $ git clone git://github.com/thom/eth-intervals-c.git
@@ -49,7 +49,7 @@ Use the CMake option
 
 to change the LLVM installation prefix.
 
-##Note
+## Note
 
 You also have to set ```LLVM_INSTALL_PREFIX``` if you installed LLVM and
 clang on your own in another directory as the CMake scripts will use
